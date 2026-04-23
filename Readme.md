@@ -4,7 +4,7 @@ A full-stack, production-ready application to help you monitor and manage your d
 
 The application is resilient and handles real-world scenarios, such as network retries and duplicate submissions, using an idempotency key mechanism.
 
-**Live Demo:** [Render Link](#)  
+**Live Demo:** [Render Link](https://expense-tracker-1-1omc.onrender.com/)  
 *(Note: As this is hosted on Render's free tier, please allow up to 50 seconds for the initial cold start when logging in for the first time.)*
 
 ---
