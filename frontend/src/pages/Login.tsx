@@ -8,11 +8,13 @@ import { login, type LoginRequest } from "../api/auth";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login: authLogin } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
         const requestData: LoginRequest = {
             email: email,
@@ -20,12 +22,7 @@ const Login = () => {
         }
 
         try {
-
-            //Calling the Go Backend
             const response = await login(requestData);
-
-            console.log(response);
-
             const { token, user } = response.data;
 
             if (!token) {
@@ -33,54 +30,66 @@ const Login = () => {
             }
 
             authLogin({ token, user });
-            toast.success('🦄 Login Sucessful');
-            navigate("/");
+            toast.success('Login Successful');
+            navigate("/dashboard");
 
         } catch (error) {
             if (isAxiosError(error)) {
                 const message = error.response?.data?.message || "Login failed";
                 toast.error(message);
-            }
-
-            else if (error instanceof Error) {
+            } else if (error instanceof Error) {
                 toast.error(error.message);
-            }
-
-            else {
+            } else {
                 toast.error("An unexpected error occurred");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
-            <div className="bg-white p-8 rounded-2xl shadow-xl w-96 flex flex-col gap-4">
-                <h1 className="text-2xl font-bold mb-2 text-center">Welcome Back 📸</h1>
-                <form
-                    onSubmit={handleLogin}
-                    className="flex flex-col gap-4"
-                >
-                    <input
-                        className="w-full p-3 border rounded-lg"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        className="w-full p-3 border rounded-lg"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
-                        Login
+        <div className="dashboard-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <h1 style={{ marginBottom: '0.5rem' }}>Welcome Back</h1>
+                    <p className="text-muted">Sign in to manage your expenses</p>
+                </div>
+
+                <form onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
 
-                <p className="text-sm text-center mt-2">
-                    New here? <Link to="/signup" className="text-indigo-600">Sign up</Link>
-                </p>
+                <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem' }}>
+                    <span className="text-muted">Don't have an account? </span>
+                    <Link to="/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
+                        Create one
+                    </Link>
+                </div>
             </div>
         </div>
     );

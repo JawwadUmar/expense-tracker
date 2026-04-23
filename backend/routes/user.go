@@ -10,7 +10,7 @@ import (
 
 func signup(context *gin.Context) {
 	var signupRequest models.SignupRequest
-	err := context.ShouldBind(&signupRequest) //not with JSON as it will be a form data :)
+	err := context.ShouldBindJSON(&signupRequest)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{

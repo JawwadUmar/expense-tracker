@@ -46,12 +46,4 @@ export interface LoginResponse {
 /* ---------- api calls ---------- */
 export const login = (data: LoginRequest) => api.post(loginEnpoint, data);
 // export const signup = (data: SignUpRequest) => api.post(signUpEnpoint, data);
-export const signup = (data: SignUpRequest) => {
-    const formData = new FormData();
-
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("first_name", data.name);
-
-    return api.post(signUpEnpoint, formData);
-};
+export const signup = (data: SignUpRequest) => api.post(signUpEnpoint, data);

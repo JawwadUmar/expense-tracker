@@ -1,4 +1,3 @@
-// pages/Signup.tsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signup, type SignUpRequest } from "../api/auth";
@@ -9,11 +8,14 @@ const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
+        
         const requestData: SignUpRequest = {
             email: email,
             password: password,
@@ -22,56 +24,77 @@ const Signup = () => {
 
         try {
             await signup(requestData);
-            toast.success("Signup successful! Please login.");
+            toast.success("Account created successfully! Please log in.");
             navigate("/login");
-        }
-
-        catch (error: any) {
+        } catch (error: any) {
             if (isAxiosError(error)) {
-                // Axios stores the backend response in error.response.data
                 const message = error.response?.data?.message || "Signup failed";
                 toast.error(message);
             } else {
                 toast.error(error.response?.data?.message || "An unexpected error occurred");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-500 to-orange-400">
-            <form className="bg-white p-8 rounded-2xl shadow-xl w-96" onSubmit={handleSignup}>
-                <h1 className="text-2xl font-bold mb-6 text-center">Create Account ✨</h1>
-                <input
-                    type="email"
-                    className="w-full mb-4 p-3 border rounded-lg"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                    type="password"
-                    className="w-full mb-4 p-3 border rounded-lg"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+        <div className="dashboard-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <h1 style={{ marginBottom: '0.5rem' }}>Create Account</h1>
+                    <p className="text-muted">Start tracking your expenses today</p>
+                </div>
 
-                <input
-                    type="text"
-                    className="w-full mb-4 p-3 border rounded-lg"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
+                <form onSubmit={handleSignup}>
+                    <div className="form-group">
+                        <label className="form-label">Full Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter your full name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Enter your email address"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    
+                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Create a password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
 
-
-                <button className="w-full bg-pink-600 text-white p-3 rounded-lg hover:bg-pink-700 cursor-pointer">
-                    Sign Up
-                </button>
-                <p className="text-sm text-center mt-4">
-                    Already have an account? <Link to="/login" className="text-pink-600">Login</Link>
-                </p>
-            </form>
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
+                        {loading ? 'Creating Account...' : 'Sign Up'}
+                    </button>
+                </form>
+                
+                <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem' }}>
+                    <span className="text-muted">Already have an account? </span>
+                    <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
+                        Sign In
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 };
