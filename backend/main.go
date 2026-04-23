@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"expensetracker.com/database"
@@ -13,9 +14,10 @@ import (
 )
 
 func main() {
+	// Attempt to load .env file, but don't crash if it's missing (e.g. in production)
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("No .env file found, relying on system environment variables")
 	}
 
 	database.Init()
@@ -41,7 +43,12 @@ func main() {
 	// CORS CONFIGURATION
 	// =========================
 	server.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"},
+		AllowOrigins: []string{
+			"http://localhost:5173", 
+			"http://127.0.0.1:5173", 
+			"http://localhost:3000",
+			"https://expense-tracker-1-1omc.onrender.com",
+		},
 		AllowMethods: []string{
 			"GET",
 			"POST",
@@ -63,5 +70,13 @@ func main() {
 	}))
 
 	routes.RegisterRoutes(server)
-	server.Run(":8082")
+
+	// Get port from environment variables (provided by Render)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8082" // Fallback to 8082 for local development
+	}
+
+	log.Printf("Starting server on port %s...", port)
+	server.Run(":" + port)
 }
