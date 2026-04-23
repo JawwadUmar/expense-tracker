@@ -67,7 +67,7 @@ export default function Dashboard() {
                     <h1>Expense Tracker</h1>
                     <p className="text-muted">Welcome back, {user?.name || "User"}</p>
                 </div>
-                <button className="btn glass-panel" style={{ padding: "0.5rem 1rem" }} onClick={logout}>
+                <button className="btn btn-danger" style={{ padding: "0.5rem 1rem" }} onClick={logout}>
                     Log Out
                 </button>
             </header>
@@ -100,7 +100,7 @@ export default function Dashboard() {
                             </select>
                         </div>
                         <button 
-                            className="btn glass-panel" 
+                            className="btn btn-outline" 
                             style={{ padding: "0.75rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
                             onClick={() => setSortDesc(!sortDesc)}
                         >
