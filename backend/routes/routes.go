@@ -14,6 +14,16 @@ func RegisterRoutes(server *gin.Engine) {
 	// PROTECTED routes
 	protected := api.Group("")
 	protected.Use(middleware.AuthMiddleware())
+
+	registerExpenseRoutes(protected)
+}
+
+func registerExpenseRoutes(rg *gin.RouterGroup) {
+	expenses := rg.Group("/expenses")
+	{
+		expenses.POST("", createExpense)
+		expenses.GET("", getExpenses)
+	}
 }
 
 func registerUserRoutes(rg *gin.RouterGroup) {

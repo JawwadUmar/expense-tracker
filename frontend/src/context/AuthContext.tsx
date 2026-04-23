@@ -40,10 +40,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
     };
 
-    const updateUser = (updatedUser: User) => {
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        setUser(updatedUser);
-    };
 
     const logout = () => {
         localStorage.removeItem("token");

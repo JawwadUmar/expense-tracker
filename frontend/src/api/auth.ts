@@ -2,8 +2,8 @@ import api from "./axios";
 
 /* ---------- endpoints ---------- */
 
-const loginEnpoint: string = "/login";
-const signUpEnpoint: string = "/signup"
+const loginEnpoint: string = "/users/login";
+const signUpEnpoint: string = "/users/signup"
 
 
 /* ---------- types ---------- */

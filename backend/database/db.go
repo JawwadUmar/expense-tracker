@@ -62,8 +62,8 @@ func createTables() {
 
 func createUserTable() {
 
-	err := DB.AutoMigrate(&models.User{})
+	err := DB.AutoMigrate(&models.User{}, &models.Expense{})
 	if err != nil {
-		panic("failed to migrate User table")
+		panic("failed to migrate tables")
 	}
 }
